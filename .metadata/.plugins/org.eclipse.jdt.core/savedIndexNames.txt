@@ -1,0 +1,4 @@
+INDEX VERSION 1.131+C:\Users\Owner\Documents\GitHub\Kracker\.metadata\.plugins\org.eclipse.jdt.core
+3236456739.index
+2162829953.index
+2842528100.index

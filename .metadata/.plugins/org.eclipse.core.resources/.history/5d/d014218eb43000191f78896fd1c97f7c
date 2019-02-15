@@ -1,0 +1,113 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Kracker2 {
+
+	public static void main(String[] args) throws IOException {
+		//Phase 1: obtain password file
+		 ArrayList<String> wordsFromPass = new ArrayList<>(); 
+		Kracker2.readPassFile(wordsFromPass); //The password file is now in an array, split and stored approprietly
+		System.out.println(Arrays.toString(wordsFromPass.toArray()));
+		
+		boolean running;
+		//Phase 2: Run through the contents of the file and retrieve lines serially, one by one.
+		
+		while(running = true) {
+			//The following method for reading a file obtained from wwww.baeldung.com/java-read-lines-large-file
+			FileInputStream inputStream = null;
+			Scanner sc = null;
+			try {
+				inputStream = new FileInputStream("C:\\Users\\Owner\\Documents\\Coure Material\\Cyber\\shortOne.txt");
+				//Still need to perform the stripping from the username and password file
+				sc = new Scanner(inputStream, "UTF-8");
+				String line = sc.nextLine();
+				if (line != "") {
+					Prepend(line);		
+				} else
+					break;
+				//Note: Scanner suppresses exceptions
+				if(sc.ioException() != null) {
+					throw sc.ioException();
+				}
+			} finally {
+				if (inputStream != null) {
+					inputStream.close();
+				}
+				if (sc != null) {
+					sc.close();
+				}
+				//End of method from website
+			}
+		}
+		
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//Functions 
+	
+	public static ArrayList<String> readPassFile(ArrayList<String> wordsFromPass) {
+
+		//Following is based on code found on https://stackoverflow.com/questions/19575308/read-a-file-separated-by-tab-and-put-the-words-in-an-arraylist
+	      try{
+	            BufferedReader buf = new BufferedReader(new FileReader("C:\\Users\\Owner\\Documents\\Coure Material\\Cyber\\passwd.txt"));
+	            String lineJustFetched = null;
+	            String[] wordsArray;
+	            while(true){
+	                lineJustFetched = buf.readLine();
+	                if(lineJustFetched == null){  
+	                    break; 
+	                }else{
+	                    wordsArray = lineJustFetched.split(":");
+	                    for(String each : wordsArray){
+	                        if(!"".equals(each)){
+	                        	if(each.equals(wordsArray[1]))
+	                            wordsFromPass.add(each);
+	                        	else if(each.contentEquals(wordsArray[4])) {
+	                        		each.split("/t"); //I need to split the first and last name into 2 different elements in the array
+	                        		wordsFromPass.add(each); 
+	                        	}
+	                        }
+	                    }	
+	                }
+	            }
+	            buf.close();
+
+	        }catch(Exception e){
+	            e.printStackTrace();
+	        } //end borrowed code
+	      return (wordsFromPass);
+	}
+	
+	public static String Prepend(String line) {
+		String characterString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123467890-_=+)(*&^%$#@!`~,./<>?;':[]{}|";
+		for(int i=0; i<characterString.length(); i++) {
+			String prependedString = (characterString.charAt(i) + line);
+			try (FileWriter fw = new FileWriter("C:\\Users\\Owner\\Documents\\Coure Material\\Cyber\\BlackList.txt", true);
+					BufferedWriter bw = new BufferedWriter(fw);
+					PrintWriter out = new PrintWriter(bw)) {
+				out.println(prependedString);
+			} catch (IOException e) {
+				//exception handling to be done I guess?
+				//End of code from Stackoverflow
+			}	
+		}
+		return null;
+	}
+}
